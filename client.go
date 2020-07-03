@@ -61,7 +61,13 @@ func (c *Client) fillRequestData(params Params) Params {
 
 // https no cert post
 func (c *Client) postWithoutCert(url string, params Params) (string, error) {
-	h := &http.Client{}
+	h := &http.Client{
+		Transport:&http.Transport{
+            			TLSClientConfig:&tls.Config{
+                		InsecureSkipVerify:true,
+            		},
+        	},
+	}
 	p := c.fillRequestData(params)
 	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
 	if err != nil {
